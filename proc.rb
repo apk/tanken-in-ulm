@@ -1,6 +1,9 @@
 require 'rubygems'
 require 'json'
 
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 stm=JSON.parse(File.read('stm.json'))
 stm.each_pair do |k,v|
   # puts v.inspect
@@ -29,7 +32,7 @@ File.open('data/flist') do |fi|
         i=1
         o=[j['t']/86400.0]
         keys.each do |k|
-          o[i]=j[k]+i/1000.0
+          o[i]=j[k] ? j[k]+i/1000.0 : 1.2
           i+=1
         end
         out[o[0]]=o

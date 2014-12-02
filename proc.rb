@@ -29,7 +29,7 @@ File.open('data/flist') do |fi|
         i=1
         o=[j['t']/86400.0]
         keys.each do |k|
-          o[i]=j[k]
+          o[i]=j[k]+i/1000.0
           i+=1
         end
         out[o[0]]=o
@@ -51,7 +51,7 @@ IO.popen("gnuplot44","w") do |f|
   # f.puts "set xrange [0:24]"
   f.puts "set grid"
   z=1
-  s=keys.map do |a|
+  s=keys.sort.map do |a|
     z+=1
     "\"tmp.data\" using 1:#{z} with lines title \"#{TANKS[a]}\""
   end

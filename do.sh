@@ -8,5 +8,4 @@ mkdir -p data
 touch data/flist
 
 /package/host/localhost/ruby-2.1.1/bin/ruby fetch.rb
-
-
+/package/host/localhost/ruby-2.1.1/bin/ruby proc.rb

@@ -30,7 +30,7 @@ File.open('data/flist') do |fi|
       f.each_line do |l|
         j=JSON.parse(l)
         i=1
-        o=[j['t']/86400.0]
+        o=[j['t']]
         keys.each do |k|
           o[i]=j[k] ? j[k]+i/1000.0 : 1.2
           i+=1
@@ -48,9 +48,13 @@ File.open("tmp.data","w") do |f|
 end
 
 IO.popen("gnuplot44","w") do |f|
-  f.puts "set terminal png size 640,256"
+  f.puts "set terminal png size 1024,384"
   f.puts "set output \"cost.png\""
   f.puts "set title \"E5\""
+  # f.puts "set xtics scale 0.6"
+  f.puts "set timefmt \"%s\""
+  f.puts "set format x \"%d.%m %H\""
+  f.puts "set xdata time"
   # f.puts "set xrange [0:24]"
   f.puts "set grid"
   z=1

@@ -48,7 +48,7 @@ rescue Errno::ENOENT
 puts fn.inspect
 end
 File.open("data/flist","w") do |f|
-  fn.sort.uniq.reverse[0..7].each do |n|
+  fn.sort.uniq.reverse[0..3].each do |n|
     f.puts n
   end
 end

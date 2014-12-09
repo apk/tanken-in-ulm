@@ -6,26 +6,34 @@ Encoding.default_internal = Encoding::UTF_8
 
 res=nil
 
-IO.popen("/usr/bin/wget --tries=1 -O - 'http://www.spritpreismonitor.de/suche/?tx_spritpreismonitor_pi1[searchRequest][plzOrtGeo]=89073&tx_spritpreismonitor_pi1[searchRequest][umkreis]=5&tx_spritpreismonitor_pi1[searchRequest][kraftstoffart]=e5&tx_spritpreismonitor_pi1[searchRequest][tankstellenbetreiber]='") do |f|
-  f.each_line do |l|
-    if l =~ /var spmResult = (\[.*\]);/
-      res=$1
-    end
-  end
-end
+urls=[
+  'http://www.spritpreismonitor.de/suche/?tx_spritpreismonitor_pi1[searchRequest][plzOrtGeo]=89073&tx_spritpreismonitor_pi1[searchRequest][umkreis]=5&tx_spritpreismonitor_pi1[searchRequest][kraftstoffart]=e5&tx_spritpreismonitor_pi1[searchRequest][tankstellenbetreiber]=',
+  'http://www.spritpreismonitor.de/suche/?tx_spritpreismonitor_pi1[searchRequest][plzOrtGeo]=B%C3%B6blingen&tx_spritpreismonitor_pi1[searchRequest][umkreis]=2&tx_spritpreismonitor_pi1[searchRequest][kraftstoffart]=e5&tx_spritpreismonitor_pi1[searchRequest][tankstellenbetreiber]='
+]
 
-js=JSON.parse(res)
 t=Time.now().to_i
 out={ 't' => t}
 stm={}
 
-js.each do |j|
-  begin
-    out[j['mtsk_id']]=j['e5'].to_f
-  rescue e
-    # nix
+urls.each do |url|
+  IO.popen("/usr/bin/wget --tries=1 -O - '#{url}'") do |f|
+    f.each_line do |l|
+      if l =~ /var spmResult = (\[.*\]);/
+        res=$1
+      end
+    end
   end
-  stm[j['mtsk_id']]=j
+
+  js=JSON.parse(res)
+
+  js.each do |j|
+    begin
+      out[j['mtsk_id']]=j['e5'].to_f
+    rescue e
+      # nix
+    end
+    stm[j['mtsk_id']]=j
+  end
 end
 
 s=(t%86400).to_s
@@ -52,4 +60,3 @@ File.open("data/flist","w") do |f|
     f.puts n
   end
 end
-

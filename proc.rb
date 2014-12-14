@@ -55,6 +55,7 @@ IO.popen("gnuplot44","w") do |f|
   f.puts "set timefmt \"%s\""
   f.puts "set format x \"%d.%m %H\""
   f.puts "set xdata time"
+  f.puts "set key horizontal below"
   # f.puts "set xrange [0:24]"
   f.puts "set grid"
   z=1
